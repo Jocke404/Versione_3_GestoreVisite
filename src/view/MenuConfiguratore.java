@@ -20,18 +20,21 @@ public class MenuConfiguratore implements Menu {
     private static final String [] SOTTOMENU_VOLONTARI={
         "Aggiungi Volontario", "Aggiungi volontari a un tipo di visita",
         "Rimuovi volontari da un tipo di visita", "Visualizza tutti i Volontari",
-        "Visualizza volontari per tipo di visita",
+        "Visualizza volontari per tipo di visita", "Elimina Volontario"
     };
 
     private static final String [] SOTTOMENU_VISITE={
         "Aggiungi Visita", "Visualizza Visite", 
         "Modifica stato della visita", "Modifica data della visita",  
         "Visualizza visite per stato", "Visualizza archivio storico",
-        "Elimina Visita", "Assegna Visita a Volontario"
+        "Elimina Visita", "Assegna Visita a Volontario", 
+        "Rimuovi Visita da Volontario", 
     };
 
     private static final String [] SOTTOMENU_LUOGHI={
-        "Aggiungi Luogo", "Visualizza Luoghi", "Stampa Tipi Visita per Luogo", 
+        "Aggiungi Luogo", "Visualizza Luoghi", 
+        "Stampa Tipi Visita per Luogo", "Modifica Luogo", 
+        "Elimina Luogo"
     };
 
     private final ConfiguratoriController configuratoriController;
@@ -93,6 +96,8 @@ public class MenuConfiguratore implements Menu {
                     case 1 -> configuratoriController.aggiungiLuogo();
                     case 2 -> configuratoriController.mostraLuoghi();
                     case 3 -> configuratoriController.stampaTipiVisitaClassPerLuogo();
+                    case 4 -> configuratoriController.modificaLuogo();
+                    case 5 -> configuratoriController.eliminaLuogo();
 
                     case 0 -> tornaIndietro = true;
                     default -> System.out.println("Opzione non valida.");
@@ -115,9 +120,9 @@ public class MenuConfiguratore implements Menu {
                 case 4 -> configuratoriController.modificaDataVisita();
                 case 5 -> configuratoriController.visualizzaVisitePerStato();
                 case 6 -> configuratoriController.visualizzaArchivioStorico();
-                case 8 -> configuratoriController.eliminaVisita();
-                case 9 -> configuratoriController.assegnaVisitaAVolontario();
-                case 10 -> configuratoriController.rimuoviVisitaDaVolontario();
+                case 7 -> configuratoriController.eliminaVisita();
+                case 8 -> configuratoriController.assegnaVisitaAVolontario();
+                case 9 -> configuratoriController.rimuoviVisitaDaVolontario();
 
 
 
@@ -141,7 +146,7 @@ public class MenuConfiguratore implements Menu {
                 case 3 -> configuratoriController.rimuoviVolontariDaTipoVisita();
                 case 4 -> configuratoriController.mostraVolontari();
                 case 5 -> configuratoriController.visualizzaVolontariPerTipoVisita();
-                // case 6 -> configuratoriController.eliminaVolontario();
+                case 6 -> configuratoriController.eliminaVolontario();
 
                 case 0 -> tornaIndietro = true;
                 default -> System.out.println("Opzione non valida.");

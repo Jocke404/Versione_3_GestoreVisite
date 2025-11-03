@@ -61,6 +61,10 @@ public class VolontariController {
         return List.copyOf(volontariManager.getVolontariMap().values());
     }
 
+    public void eliminaVolontario(Volontario volontarioDaEliminare) {
+        volontariManager.eliminaVolontario(volontarioDaEliminare);
+    }
+
     public void modificaPassword() {
         String nuovaPassword;
         String vecchiaPassword = volontarioCorrente.getPassword();
