@@ -593,7 +593,7 @@ public class ConsoleIO implements View{
 
         // FASE 2: Aggiunta tipi di visita
         // ottieni tutti i tipi disponibili e rimuovi quelli già presenti
-        List<TipiVisitaClass> tipiDisponibili = new ArrayList<>(TipiVisitaClass.values());
+        List<TipiVisitaClass> tipiDisponibili = new ArrayList<>(VisiteManagerDB.getTipiVisitaClassList());
         tipiDisponibili.removeAll(nuoviTipi);
 
         if (!tipiDisponibili.isEmpty() && InputDati.yesOrNo("Vuoi aggiungere nuovi tipi di visita?")) {
@@ -618,53 +618,6 @@ public class ConsoleIO implements View{
         }
         return nuoviTipi;
     }
-
-
-    // public List<TipiVisitaClass> chiediNuoviTipiVisitaClass(List<TipiVisitaClass> tipiAttuali) {
-
-    //     List<TipiVisitaClass> nuoviTipi = new ArrayList<>(tipiAttuali == null ? List.of() : tipiAttuali);
-    //     // FASE 1: Eliminazione tipi di visita
-    //     if (!nuoviTipi.isEmpty() && InputDati.yesOrNo("Vuoi eliminare uno o più tipi di visita attuali?")) {
-    //         boolean eliminaAltro;
-    //         do {
-    //             mostraMessaggio("Tipi di visita attuali:");
-    //             mostraElencoConOggetti(nuoviTipi);
-    //             int sceltaElimina = InputDati.leggiIntero("Seleziona il numero del tipo di visita da eliminare (oppure 0 per terminare): ", 0, nuoviTipi.size());
-    //             if (sceltaElimina == 0) {
-    //                 break;
-    //             }
-    //             TipiVisitaClass tipoDaEliminare = nuoviTipi.get(sceltaElimina - 1);
-    //             nuoviTipi.remove(tipoDaEliminare);
-    //             eliminaAltro = !nuoviTipi.isEmpty() && InputDati.yesOrNo("Vuoi eliminare un altro tipo di visita?");
-    //         } while (eliminaAltro);
-    //     }
-
-    //     // FASE 2: Aggiunta tipi di visita
-    //     List<TipiVisitaClass> tipiDisponibili = new ArrayList<>(TipiVisitaClass.values());
-    //     tipiDisponibili.removeAll(nuoviTipi);
-
-    //     if (!tipiDisponibili.isEmpty() && InputDati.yesOrNo("Vuoi aggiungere nuovi tipi di visita?")) {
-    //         while (!tipiDisponibili.isEmpty()) {
-    //             mostraMessaggio("Tipi di visita che puoi ancora aggiungere:");
-    //             mostraElencoConOggetti(tipiDisponibili);
-
-    //             int sceltaTipi = InputDati.leggiIntero("Seleziona il numero del tipo di visita da aggiungere (oppure 0 per terminare): ", 0, tipiDisponibili.size());
-    //             if (sceltaTipi == 0) {
-    //                 break;
-    //             }
-    //             TipiVisitaClass tipoScelto = tipiDisponibili.get(sceltaTipi - 1);
-    //             nuoviTipi.add(tipoScelto);
-    //             tipiDisponibili.remove(tipoScelto);
-
-    //             if (!tipiDisponibili.isEmpty()) {
-    //                 if (!InputDati.yesOrNo("Vuoi aggiungere un altro tipo di visita?")) {
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return tipiAttuali; // Placeholder
-    // }
 
     public void mostraConfrontoLuogo(Luogo luogo, String nuovoNome, String nuovaDescrizione, String nuovaCollocazione, List<TipiVisitaClass> nuoviTipi) {
         mostraMessaggio("\n--- CONFRONTO MODIFICHE ---");
@@ -778,6 +731,27 @@ public class ConsoleIO implements View{
         String newTipoDesc = InputDati.leggiStringaNonVuota("Descrizione del nuovo Tipo: ");
         return new TipiVisitaClass(newTipo, newTipoDesc);
     }
+    
+    public void mostraDisponibilitaEsistenti(List<LocalDate> disponibilitaEsistenti) {
+        mostraMessaggio("Le tue disponibilità attuali sono:");
+        mostraElencoConOggetti(disponibilitaEsistenti);
+    }
 
+    public List<LocalDate> chiediNuoveDisponibilita(List<LocalDate> disponibilitaEsistenti, List<Integer> giorniDisponibili, ValidatoreVisite validatore) {
+        YearMonth ym = YearMonth.now().plusMonths(1);
+        for (LocalDate data : disponibilitaEsistenti) {
+            if (InputDati.yesOrNo("Vuoi modificare la disponibilità per il " + data + "?")) {
+                mostraCalendarioMese(ym, giorniDisponibili);
+                List<Integer> giorniSelezionati = chiediGiorniDisponibili(ym, new ArrayList<>(giorniDisponibili));
+                LocalDate nuovaData = validatore.filtraDateDisponibiliSingola(giorniSelezionati, ym);
 
+                disponibilitaEsistenti.set(disponibilitaEsistenti.indexOf(data), nuovaData);
+            }
+        }
+        return disponibilitaEsistenti;
+    }
+
+    public boolean chiediConfermaRimozioneTipoVisita(TipiVisitaClass tipoDaRimuovere) {
+        return InputDati.yesOrNo("Sei sicuro di voler rimuovere il tipo di visita: " + tipoDaRimuovere + "?");
+    }
 }

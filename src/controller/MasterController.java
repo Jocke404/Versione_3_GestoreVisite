@@ -103,8 +103,8 @@ public class MasterController {
                     }
                 }, 5, 5, TimeUnit.SECONDS); 
             }
+            aggiornaDatabaseAsync();            
             showMenu();
-            aggiornaDatabaseAsync();
         }
     }
 
