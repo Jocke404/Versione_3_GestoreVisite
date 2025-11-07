@@ -129,7 +129,8 @@ public class ViewUtilita {
     
         for (Map.Entry<Integer, Visita> entry : visiteMap.entrySet()) {
             Visita visita = entry.getValue();
-            if (visita.getVolontario().equals(volontario.getNome() + " " + volontario.getCognome())) {
+            if (visita.getVolontario().equals(volontario.getNome() + " " + volontario.getCognome()) &&
+                !visita.getStato().equalsIgnoreCase("CANCELLATA")) {
                 System.out.println("ID: " + entry.getKey());
                 System.out.println("Luogo: " + visita.getLuogo());
                 System.out.println("Tipi Visita: " + visita.getTipiVisitaClassString());
@@ -205,7 +206,7 @@ public class ViewUtilita {
             String stato = visita.getStato();
             int postiDisponibili = visita.getPostiDisponibili();
 
-            if ((stato.equalsIgnoreCase("Proposta") || stato.equalsIgnoreCase("Confermata")|| stato.equalsIgnoreCase("Cancellata"))
+            if ((stato.equalsIgnoreCase("Proposta") || stato.equalsIgnoreCase("Confermata"))
                 && postiDisponibili > 0) {
                 consoleIO.mostraMessaggio("ID: " + visita.getId());
                 consoleIO.mostraMessaggio("Titolo: " + visita.getTitolo());
@@ -289,6 +290,18 @@ public class ViewUtilita {
         }
 
         consoleIO.mostraMessaggio("Il numero massimo di persone iscrivibili da un fruitore è attualmente: " + value);
+    }
+
+    public void stampaTipiVisitaVolontario(Volontario volontarioCorrente, VolontariManager volontariManager) {
+        List<TipiVisitaClass> tipiVisita = volontariManager.getTipiVisitaAssegnatiVolontario(volontarioCorrente);
+        if (tipiVisita.isEmpty()) {
+            consoleIO.mostraMessaggio("Nessun tipo di visita assegnato.");
+            return;
+        }
+        consoleIO.mostraMessaggio("Tipi di visita assegnati a " + volontarioCorrente.getNome() + ":");
+        for (TipiVisitaClass tipo : tipiVisita) {
+            consoleIO.mostraMessaggio("- " + tipo);
+        }
     }
     
 }

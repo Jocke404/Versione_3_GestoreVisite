@@ -140,4 +140,8 @@ public class VolontariController {
     public void rimuoviVisitaDaVolontario(Visita visitaSelezionata, Volontario volontarioSelezionato) {
         volontariManager.rimuoviVisitaVolontario(visitaSelezionata, volontarioSelezionato);
     }
+
+    public void visualizzaTipiVisitaVolontario() {
+        viewUtilita.stampaTipiVisitaVolontario(volontarioCorrente, volontariManager);
+    }
 }

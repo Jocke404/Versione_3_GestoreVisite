@@ -207,6 +207,27 @@ public class VolontariManager extends DatabaseManager {
         });
     }
 
+    protected List<TipiVisitaClass> getTipiVisitaAssegnatiVolontarioDB(Volontario volontarioCorrente) {
+        String sql = "SELECT tipi_di_visite FROM volontari WHERE email = ?";
+        List<TipiVisitaClass> tipiVisitaAssegnati = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, volontarioCorrente.getEmail());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String tipiDiVisite = rs.getString("tipi_di_visite");
+                    if (tipiDiVisite != null && !tipiDiVisite.isEmpty()) {
+                        for (String tipo : tipiDiVisite.split(",")) {
+                            tipiVisitaAssegnati.add(TipiVisitaClass.valueOf(tipo.trim()));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore durante il recupero dei tipi di visita assegnati al volontario: " + e.getMessage());
+        }
+        return tipiVisitaAssegnati;
+    }
      
     public void aggiungiTipoVisitaAVolontari (String email, TipiVisitaClass tipoVisita){
         synchronized (volontariMap){
@@ -337,5 +358,7 @@ public class VolontariManager extends DatabaseManager {
         rimuoviVisitaDaVolontario(visitaSelezionata, volontarioSelezionato);
     }
 
-
+    public List<TipiVisitaClass> getTipiVisitaAssegnatiVolontario(Volontario volontarioCorrente) {
+        return getTipiVisitaAssegnatiVolontarioDB(volontarioCorrente);
+    }
 }
